@@ -20,7 +20,6 @@ on:
       temperature:
         description: Target temperature in Fahrenheit (60-80)
         required: true
-        default: "72"
         type: string
       dry_run:
         description: Dry run - inspect only, send no commands
