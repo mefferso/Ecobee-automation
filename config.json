@@ -7,6 +7,7 @@
     "beach_house": "Beach House"
   },
   "beach_house": {
+    "timezone": "America/Chicago",
     "occupied": {
       "cool_f": 71,
       "heat_f": 68
