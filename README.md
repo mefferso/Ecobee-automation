@@ -9,15 +9,17 @@ Cloud-only Ecobee automation for the Dauphin Island beach house using:
 
 ## Current status
 
-Phase 1 is in place: SmartThings discovery and manual thermostat test workflows.
+SmartThings discovery was successfully verified on September 29, 2026.
 
-Automatic Beach House control is intentionally disabled in `config.json` until SmartThings API control is verified against a Mandeville thermostat.
+All three Ecobee thermostats are visible to GitHub Actions through SmartThings:
 
-## Thermostats
-
-- Kitchen n Living
+- Kitchen n Living Room
 - Bedrooms
 - Beach House
+
+The next test is a dry-run against one Mandeville thermostat, followed by one real setpoint change after the dry-run output is verified.
+
+Automatic Beach House control is intentionally disabled in `config.json` until the complete control path and data sources are verified.
 
 ## Beach House targets
 
@@ -39,73 +41,76 @@ Rental timing:
 
 Tempest device serial: `ST-00221346`
 
-## Phase 1: SmartThings API proof
+## SmartThings API test setup
 
 SmartThings Personal Access Tokens created now expire after 24 hours, so the PAT is only for initial testing. The permanent automation will use OAuth with refresh-token handling.
 
-### 1. Create a temporary SmartThings PAT
-
-Create a PAT in the SmartThings account portal and grant:
-
-- Read devices
-- Execute device commands
-
-Do not commit the token to this repository.
-
-### 2. Add the token as a GitHub Actions secret
+### GitHub Actions secret
 
 Repository:
 
-`Settings -> Secrets and variables -> Actions -> New repository secret`
+`Settings -> Secrets and variables -> Actions`
 
-Name:
+Required secret:
 
 `SMARTTHINGS_TOKEN`
 
-Value:
+Never commit the token to the repository.
 
-the SmartThings PAT
+### Device discovery
 
-### 3. Run device discovery
-
-Open:
+Workflow:
 
 `Actions -> SmartThings - List thermostats -> Run workflow`
 
-Expected thermostat labels:
+This has already been verified successfully.
 
-- Kitchen n Living
-- Bedrooms
-- Beach House
+### Safe Mandeville test
 
-### 4. Run a safe Mandeville test
-
-Open:
+Workflow:
 
 `Actions -> Test Mandeville thermostat -> Run workflow`
 
 Start with:
 
-- Thermostat: Kitchen n Living or Bedrooms
+- Thermostat: Kitchen n Living Room or Bedrooms
 - Mode: match the thermostat's current mode
 - Temperature: choose a harmless nearby target
 - Dry run: true
 
-The log should show the matched SmartThings device ID and current thermostat state without sending a command.
+The dry run reads and prints the thermostat state but sends no command.
 
-Once the dry run looks correct, rerun with `dry_run = false` to prove SmartThings can actually change the Ecobee.
+After the dry run is verified, rerun with `dry_run = false` for one controlled live test.
 
 ## Manual Beach House workflow
 
-A separate manual workflow exists for the Beach House thermostat. Keep `dry_run = true` until the Mandeville API test succeeds.
+A separate `Manual Beach House thermostat` workflow exists.
 
-## Safety
+Keep `dry_run = true` until the Mandeville live-control test succeeds.
 
-The client rejects requested setpoints outside 60-80 F.
+## Command safety and verification
+
+The SmartThings client:
+
+- Requires a complete thermostat device profile.
+- Matches thermostats by exact SmartThings label.
+- Rejects requested setpoints outside 60-80 F.
+- Refuses a live setpoint change unless SmartThings reports the relevant setpoint in Fahrenheit.
+- Checks that the requested heat/cool mode is supported when SmartThings reports supported modes.
+- Uses SmartThings `setThermostatMode`, `setCoolingSetpoint`, and `setHeatingSetpoint` commands.
+- Sends mode and setpoint together in one SmartThings command request.
+- Requires every SmartThings command result to be `ACCEPTED`.
+- Polls the thermostat after a live command and verifies that the requested mode/setpoint actually appear.
+- Masks most of the SmartThings device ID in new workflow logs.
+- Serializes thermostat-control workflows so two manual/control jobs cannot change a thermostat at the same time.
+
+## Automatic-control gate
 
 Automatic Beach House control remains disabled until:
 
-1. SmartThings control is verified.
-2. Permanent SmartThings OAuth is configured.
-3. Tempest data access is verified.
-4. Rental spreadsheet access and date parsing are verified.
+1. Mandeville dry-run inspection succeeds.
+2. One Mandeville live-control test succeeds.
+3. Permanent SmartThings OAuth is configured.
+4. Tempest data access is verified.
+5. Rental spreadsheet access and date parsing are verified.
+6. Arrival preconditioning logic is tested in dry-run mode.
