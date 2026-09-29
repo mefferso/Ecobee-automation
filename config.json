@@ -1,0 +1,32 @@
+{
+  "thermostats": {
+    "home": [
+      "Kitchen n Living",
+      "Bedrooms"
+    ],
+    "beach_house": "Beach House"
+  },
+  "beach_house": {
+    "occupied": {
+      "cool_f": 71,
+      "heat_f": 68
+    },
+    "vacant": {
+      "cool_f": 74,
+      "heat_f": 64
+    },
+    "mode_thresholds": {
+      "cool_above_f": 70,
+      "heat_below_f": 65,
+      "deadband_behavior": "keep_current_mode"
+    },
+    "check_in_local": "16:00",
+    "check_out_local": "10:00",
+    "tempest_device_serial": "ST-00221346"
+  },
+  "safety": {
+    "minimum_setpoint_f": 60,
+    "maximum_setpoint_f": 80,
+    "automatic_beach_house_control_enabled": false
+  }
+}
