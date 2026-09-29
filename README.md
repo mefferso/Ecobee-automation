@@ -17,7 +17,7 @@ All three Ecobee thermostats are visible to GitHub Actions through SmartThings:
 - Bedrooms
 - Beach House
 
-The next test is a dry-run against one Mandeville thermostat, followed by one real setpoint change after the dry-run output is verified.
+SmartThings read access and live thermostat control have both been verified against the Mandeville Bedrooms Ecobee. A live cooling-setpoint change was accepted by SmartThings and independently verified from the thermostat state within 2 seconds.
 
 Automatic Beach House control is intentionally disabled in `config.json` until the complete control path and data sources are verified.
 
@@ -109,8 +109,8 @@ The SmartThings client:
 
 Automatic Beach House control remains disabled until:
 
-1. Mandeville dry-run inspection succeeds.
-2. One Mandeville live-control test succeeds.
+1. ~~Mandeville dry-run inspection succeeds.~~ Verified 2026-09-29.
+2. ~~One Mandeville live-control test succeeds.~~ Verified 2026-09-29.
 3. Permanent SmartThings OAuth is configured.
 4. Tempest data access is verified.
 5. Rental spreadsheet access and date parsing are verified.
