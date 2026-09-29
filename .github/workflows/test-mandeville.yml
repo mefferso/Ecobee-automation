@@ -8,7 +8,7 @@ on:
         required: true
         type: choice
         options:
-          - Kitchen n Living
+          - Kitchen n Living Room
           - Bedrooms
       mode:
         description: HVAC mode
