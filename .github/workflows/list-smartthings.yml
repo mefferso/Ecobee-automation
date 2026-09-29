@@ -1,0 +1,19 @@
+name: SmartThings - List thermostats
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  list:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: List thermostat-like devices
+        env:
+          SMARTTHINGS_TOKEN: ${{ secrets.SMARTTHINGS_TOKEN }}
+        run: python3 scripts/smartthings.py list
