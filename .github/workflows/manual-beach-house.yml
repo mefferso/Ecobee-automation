@@ -1,0 +1,48 @@
+name: Manual Beach House thermostat
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: HVAC mode
+        required: true
+        type: choice
+        options:
+          - cool
+          - heat
+      temperature:
+        description: Target temperature in Fahrenheit (60-80)
+        required: true
+        default: "71"
+        type: string
+      dry_run:
+        description: Dry run - inspect only, send no commands
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  manual:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate and control Beach House thermostat
+        env:
+          SMARTTHINGS_TOKEN: ${{ secrets.SMARTTHINGS_TOKEN }}
+        shell: bash
+        run: |
+          ARGS=(
+            set
+            --device "Beach House"
+            --mode "${{ inputs.mode }}"
+            --temperature "${{ inputs.temperature }}"
+          )
+          if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+            ARGS+=(--dry-run)
+          fi
+          python3 scripts/smartthings.py "${ARGS[@]}"
