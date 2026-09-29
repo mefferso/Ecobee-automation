@@ -24,12 +24,17 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ecobee-thermostat-control
+  cancel-in-progress: false
+
 jobs:
   manual:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Validate and control Beach House thermostat
         env:
