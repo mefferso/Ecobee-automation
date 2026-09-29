@@ -38,6 +38,7 @@ Rental timing:
 
 - Check-in: 4:00 PM local
 - Check-out: 10:00 AM local
+- Time zone: America/Chicago (handles CST/CDT automatically)
 
 Tempest device serial: `ST-00221346`
 
