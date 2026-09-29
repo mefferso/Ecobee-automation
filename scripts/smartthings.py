@@ -245,7 +245,7 @@ def set_thermostat(token, name, mode, temperature, dry_run):
     # SmartThings ACCEPTED means queued, not necessarily applied. Poll briefly
     # so a manual test fails loudly if the thermostat never reflects the request.
     latest = before
-    for attempt in range(1, 7):
+    for attempt in range(1, 16):
         time.sleep(2)
         latest = status_summary(device_status(token, device_id))
         if matches_requested(latest, mode, temperature):
@@ -257,7 +257,7 @@ def set_thermostat(token, name, mode, temperature, dry_run):
     print(json.dumps(latest, indent=2))
     raise RuntimeError(
         "SmartThings accepted the commands, but the requested thermostat state "
-        "was not verified within 12 seconds."
+        "was not verified within 30 seconds."
     )
 
 
